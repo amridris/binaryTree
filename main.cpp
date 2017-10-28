@@ -1,5 +1,4 @@
-#include "tree.h"
-
+#include "../inc/tree.h"
 namespace lab7 {
     void clear(node *to_clear);
 
