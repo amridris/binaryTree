@@ -310,7 +310,7 @@ namespace lab7 {
     // Number of items in the tree
     unsigned tree::size() {
         unsigned size_counter;
-        size_counter = find_size(this->root, size_counter);
+        size_counter = find_size(this->root);
     }
 
 
