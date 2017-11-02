@@ -14,6 +14,8 @@ namespace lab7 {
         if(root == nullptr)
         {
             root = new node(key);
+            
+            return;
         }
 
             // move through tree until you find a empty space
