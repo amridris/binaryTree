@@ -1,44 +1,62 @@
+
+
+
 #include <iostream>
 #include "tree.h"
 #include "vector"
 
 
-namespace lab7 {
+
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ AUXILIARY FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-    //Auxiliary function (insert)
-    node* insert_node(int key, node* root)
+    node *print_least_greatest(node* root)
     {
-        //empty tree or subtree, also acts like a base case for the recursion method
         if(root == nullptr)
         {
-            root = new node(key);
-            
-            return;
+            return root;
         }
 
-            // move through tree until you find a empty space
-        else if(key < root->data)
+        else
         {
-            root->left = insert_node(key, root->left);
+            print_least_greatest(root->left);
+            std::cout<<root->data<<std::endl;
+            print_least_greatest(root->right);
         }
 
-            // move through tree until you find a empty space
-        else if(key > root-> data)
-        {
-            root->right = insert_node(key, root->right);
-        }
-
-            //if we found a value equal to key update the frequency
-        else{
-            root->frequency++;
-        }
-
-        //finally return the node pointer
         return root;
+
     }
 
+    //Auxiliary function (insert)
+    node* insert_node(int key, node* root) {
+        //empty tree or subtree, also acts like a base case for the recursion method
+        if (root == nullptr) {
+            root = new node(key);
+        }
+
+        else {
+
+            // move through tree until you find a empty space
+            if (key < root->data) {
+
+                root->left = insert_node(key, root->left);
+            }
+
+                // move through tree until you find a empty space
+            else if (key > root->data) {
+
+                root->right = insert_node(key, root->right);
+            }
+
+            else if(key == root->data)
+            {
+                root->frequency++;
+            }
+
+        }
+        return root;
+    }
 
 
     //auxiliary function (f_min)
@@ -107,29 +125,25 @@ namespace lab7 {
 
     }
 
-    int find_level(node* root, int key, int level)
-    {
+    int find_level(node* root, int key, int level) {
         //empty tree
-        if(root == nullptr)
-        {
-            return -1;
+        if (root == nullptr) {
+            return 0;
         }
-        //found the key, return level
-        if(root->data == key)
+        if (root->data == key)
         {
             return level;
         }
-        //traverse left subtree to find key
-        if(key < root->data)
-        {
-            return find_level(root->left, key, level++);
+        else {
+            //traverse left subtree to find key
+            if (key < root->data) {
+                return find_level(root->left, key, (level + 1));
+            }
+                //traverse right subtree to find key
+            else {
+                return find_level(root->right, key, (level + 1));
+            }
         }
-        //traverse right subtree to find key
-        else{
-            return find_level(root->right, key, level++);
-        }
-
-
     }
 
     unsigned find_size(node* root)
@@ -172,27 +186,32 @@ namespace lab7 {
 
     int frequency_value(node* root, int key)
     {
-        //case 1: root is null (empty) or key is found in root data
-        if(root == nullptr || root->data == key)
+        if(root == nullptr)
         {
-            return root->frequency;
-        }
-            //case 2: key is less than root data ... check left subtree
-        else if(key < root->data)
-        {
-            return find_key(root->left, key);
-        }
-            //case 3: Key is greater than root data .. check right subtree
-        else if(key > root->data)
-        {
-            return find_key(root->right, key);
-        }
-            //Case 4: key not found
-        else
-        {
-            std::cout<<"Key was not found in the binary tree"<<std::endl;
+            //base case for the recursion
             return 0;
         }
+
+        else
+        {
+            if(key < root->data)
+            {
+                //keep traversing since key was not yet found
+                frequency_value(root->left, key);
+            }
+            else if(key>root->data)
+            {
+                //keep traversing since key was not yet found
+                frequency_value(root->right, key);
+            }
+                //key was found return the frequency value of that key
+            else
+            {
+                return root->frequency;
+            }
+
+        }
+
     }
 
     unsigned find_depth(node* root)
@@ -210,10 +229,10 @@ namespace lab7 {
 
         if(depth_left > depth_right)
         {
-            return depth_left++;
+            return depth_left+1;
         }
         else {
-            return depth_right++;
+            return depth_right+1;
         }
 
 
@@ -299,8 +318,11 @@ namespace lab7 {
 
     // What level is key on?
     int tree::level(int key) {
-        int level = 0;
-        find_level(root,key, level);
+
+        int level;
+
+        level = find_level(root,key, level);
+
         return level;
     }
 
@@ -336,7 +358,7 @@ namespace lab7 {
 
     // Print the tree least to greatest, Include duplicates
     void tree::print() {
-
+        print_least_greatest(root);
     }
 
     void tree::print_gtl() {
@@ -353,6 +375,4 @@ namespace lab7 {
         if (to_clear->right != nullptr) clear(to_clear->right);
         delete to_clear;
     }
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~auxiliary functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-
-}
+    
